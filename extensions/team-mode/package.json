@@ -1,7 +1,6 @@
 {
-  "name": "pi-extension-team-mode",
+  "name": "pi-mono-team-mode",
   "version": "0.1.0",
-  "private": true,
   "description": "Pi extension for orchestrating background multi-agent teams",
   "keywords": [
     "pi-package",

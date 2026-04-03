@@ -4,6 +4,7 @@
 
 import type { Theme } from "@mariozechner/pi-coding-agent";
 import { Key, matchesKey, truncateToWidth, visibleWidth, wrapTextWithAnsi } from "@mariozechner/pi-tui";
+import type { KeyId } from "@mariozechner/pi-tui";
 import type { CommentSeverity, CommentStatus, ReviewAction, ReviewComment } from "./common.js";
 
 function severityColor(severity: CommentSeverity): "error" | "warning" | "accent" | "muted" {
@@ -80,14 +81,14 @@ export class ReviewerComponent {
 		}
 
 		const comment = this.comments[this.currentIndex]!;
-		if (matchesKey(data, Key.up) || data === "k") {
+		if (matchesKey(data, Key.up) || matchesKey(data, Key.ctrl("k"))) {
 			if (this.currentIndex > 0) {
 				this.currentIndex--;
 				this.invalidate();
 			}
 			return;
 		}
-		if (matchesKey(data, Key.down) || data === "j") {
+		if (matchesKey(data, Key.down) || matchesKey(data, Key.ctrl("j"))) {
 			if (this.currentIndex < this.comments.length - 1) {
 				this.currentIndex++;
 				this.invalidate();
@@ -114,26 +115,26 @@ export class ReviewerComponent {
 			}
 			return;
 		}
-		if (data === "a") {
+		if (matchesKey(data, Key.ctrl("a"))) {
 			comment.status = comment.status === "approved" ? "pending" : "approved";
 			this.invalidate();
 			return;
 		}
-		if (data === "d") {
+		if (matchesKey(data, Key.ctrl("d"))) {
 			comment.status = comment.status === "dismissed" ? "pending" : "dismissed";
 			this.invalidate();
 			return;
 		}
-		if (data === "e" || matchesKey(data, Key.enter)) {
+		if (matchesKey(data, Key.ctrl("e")) || matchesKey(data, Key.enter)) {
 			this.onDone({ type: "edit", index: this.currentIndex });
 			return;
 		}
-		if (data === "A") {
+		if (matchesKey(data, Key.ctrl("p"))) {
 			for (const c of this.comments) if (c.status === "pending") c.status = "approved";
 			this.invalidate();
 			return;
 		}
-		if (data === "S") {
+		if (matchesKey(data, Key.ctrl("s"))) {
 			this.onDone({ type: "submit" });
 			return;
 		}
@@ -254,8 +255,8 @@ export class ReviewerComponent {
 			.join(" ");
 		addWrapped(`${prefixEllipsis ? th.fg("dim", "… ") : ""}${dots}${suffixEllipsis ? th.fg("dim", " …") : ""}`, "  ");
 		row("");
-		addWrapped(th.fg("dim", "↑↓/jk navigate  [/] prev/next file  a approve  d dismiss  e/Enter edit"), "  ");
-		addWrapped(th.fg("dim", "A approve all  S submit  Esc/q cancel"), "  ");
+		addWrapped(th.fg("dim", "↑↓/^j^k navigate  [/] prev/next file  ^a approve  ^d dismiss  ^e/Enter edit"), "  ");
+		addWrapped(th.fg("dim", "^p approve pending  ^s submit  Esc/q cancel"), "  ");
 		bottom();
 		this.cachedLines = lines;
 		this.cachedWidth = width;

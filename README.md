@@ -1,4 +1,4 @@
-# pi-extensions
+# power-pi
 
 Custom pi extensions.
 
@@ -19,7 +19,6 @@ pnpm install
 - **ask-user-question** — interactive forms for structured user input
 - **btw** — side-question command (`/btw`)
 - **clear** — fresh session command (`/clear`, `Ctrl+L`)
-- **loop** — loop completion controls
 - **multi-edit** — enhanced `edit` tool with batch edits and patch support
 - **review** — review a GitHub PR or GitLab MR URL and then inspect/submit it in a side pane (`/review <url>`, `/review-tui`)
 - **status-line** — shows git branch and richer runtime stats in the footer
@@ -43,19 +42,19 @@ The `btw` extension adds Claude Code-style `/btw` behavior to pi for asking a qu
 Install everything from the repo root:
 
 ```bash
-pi install /Users/emanuelcasco/Projects/waterplan/pi-extensions
+pi install npm:@power-pi
 ```
 
 Or install only `btw`:
 
 ```bash
-pi install /Users/emanuelcasco/Projects/waterplan/pi-extensions/extensions/btw
+pi install npm:pi-btw
 ```
 
 Or load it directly for testing:
 
 ```bash
-pi -e /Users/emanuelcasco/Projects/waterplan/pi-extensions/extensions/btw/index.ts
+pi -e npm:pi-btw/index.ts
 ```
 
 ### Usage

@@ -1,7 +1,6 @@
 {
-  "name": "pi-extension-ask-user-question",
+  "name": "pi-mono-ask-user-question",
   "version": "0.1.0",
-  "private": true,
   "description": "Pi extension for asking users structured interactive questions",
   "keywords": [
     "pi-package",

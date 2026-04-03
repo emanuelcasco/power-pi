@@ -1,7 +1,6 @@
 {
-  "name": "pi-extension-btw",
+  "name": "pi-mono-btw",
   "version": "0.1.0",
-  "private": true,
   "description": "Pi extension that answers side questions while the main agent keeps running",
   "keywords": [
     "pi-package",

@@ -143,28 +143,6 @@ In `multi` mode, items that omit `path` automatically inherit the top-level `pat
 | `@sinclair/typebox`             | Runtime JSON Schema / TypeBox parameter definitions |
 | `diff`                          | Line-level diff generation for result output        |
 
-## Installation
-
-Install just this package:
-
-```bash
-pi install /Users/emanuelcasco/Projects/waterplan/pi-extensions/extensions/multi-edit
-```
-
-Or install the whole workspace:
-
-```bash
-pi install /Users/emanuelcasco/Projects/waterplan/pi-extensions
-```
-
-For quick testing without a permanent install:
-
-```bash
-pi -e /Users/emanuelcasco/Projects/waterplan/pi-extensions/extensions/multi-edit/index.ts
-```
-
-> Because the extension registers as `"edit"`, it completely replaces the built-in edit tool for all sessions that load it.
-
 ## Error Handling
 
 | Situation                                                            | Behaviour                                              |

@@ -1,7 +1,6 @@
 {
-  "name": "pi-extension-multi-edit",
+  "name": "pi-mono-multi-edit",
   "version": "0.1.0",
-  "private": true,
   "description": "Pi extension that replaces edit with batch edits and Codex-style patches",
   "keywords": [
     "pi-package",

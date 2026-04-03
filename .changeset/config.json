@@ -1,0 +1,21 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.3/schema.json",
+  "changelog": "@changesets/cli/changelog",
+  "commit": false,
+  "fixed": [
+    [
+      "pi-mono-ask-user-question",
+      "pi-mono-btw",
+      "pi-mono-clear",
+      "pi-mono-multi-edit",
+      "pi-mono-review",
+      "pi-mono-status-line",
+      "pi-mono-team-mode"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}

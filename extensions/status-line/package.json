@@ -1,7 +1,6 @@
 {
-  "name": "pi-extension-status-line",
+  "name": "pi-mono-status-line",
   "version": "0.1.0",
-  "private": true,
   "description": "Pi extension that adds git branch and richer stats to the footer",
   "keywords": [
     "pi-package",
