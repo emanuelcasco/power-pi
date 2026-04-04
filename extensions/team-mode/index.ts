@@ -102,11 +102,20 @@ function getManagers(): ManagerBundle {
 // Widget helpers
 // ---------------------------------------------------------------------------
 
-/** Refresh the team status widget with the current list of all teams. */
+/** Statuses that should remain visible in the widget. */
+const WIDGET_ACTIVE_STATUSES: import("./core/types.js").TeamStatus[] = [
+	"initializing",
+	"running",
+	"paused",
+	"failed",
+];
+
+/** Refresh the team status widget with the current list of active teams. */
 async function refreshWidget(ctx: ExtensionContext): Promise<void> {
 	if (!managers) return;
 	try {
-		const teams = await managers.teamManager.listTeams();
+		// Only show teams that are still active — hide completed/cancelled ones.
+		const teams = await managers.teamManager.listTeams({ status: WIDGET_ACTIVE_STATUSES });
 		updateTeamWidget(ctx, teams);
 	} catch {
 		// Widget updates are best-effort — never surface errors from here.

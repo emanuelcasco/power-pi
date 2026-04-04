@@ -101,8 +101,8 @@ describe("TeamManager.createTeam", () => {
 	test("generates name from objective when no name provided", async () => {
 		const { manager, dir } = await setup();
 		const team = await manager.createTeam("Implement user authentication flow");
-		// Should be kebab-cased first 4 words
-		assert.equal(team.name, "implement-user-authentication-flow");
+		// Should be kebab-cased first 3 meaningful words (max 32 chars)
+		assert.equal(team.name, "implement-user-authentication");
 		await rm(dir, { recursive: true, force: true });
 	});
 

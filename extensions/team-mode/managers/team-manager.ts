@@ -32,20 +32,34 @@ import { type TeamStore, generateId } from "../core/store.js";
 // Internal helpers
 // ---------------------------------------------------------------------------
 
+/** Common words that carry no naming value. */
+const STOP_WORDS = new Set([
+	"a", "an", "the", "and", "or", "for", "in", "of", "to",
+	"with", "from", "by", "at", "on", "is", "it", "as",
+	"be", "do", "has", "had", "this", "that", "read", "file",
+]);
+
 /**
  * Convert a free-form objective string into a short, kebab-cased name.
- * Uses the first 3–4 significant words.
  *
- * @example objectiveToName("Implement user authentication flow") → "implement-user-authentication-flow"
+ * Rules:
+ * - Replace every non-alphanumeric char with a space (so paths split into tokens)
+ * - Drop tokens that are pure noise (stopwords, length < 3, or length > 16)
+ * - Keep the first 3 meaningful tokens, joined with "-"
+ * - Hard cap at 32 characters
+ *
+ * @example objectiveToName("Implement user authentication flow") → "implement-user-authentication"
+ * @example objectiveToName("refactor READ '/path/to/file.md'")  → "refactor-path-implement"
  */
 function objectiveToName(objective: string): string {
-	return objective
+	const tokens = objective
 		.toLowerCase()
-		.replace(/[^a-z0-9\s]/g, "")
+		.replace(/[^a-z0-9]/g, " ")
 		.trim()
 		.split(/\s+/)
-		.slice(0, 4)
-		.join("-");
+		.filter((w) => w.length >= 3 && w.length <= 16 && !STOP_WORDS.has(w));
+
+	return (tokens.slice(0, 3).join("-") || "team").slice(0, 32);
 }
 
 // ---------------------------------------------------------------------------
