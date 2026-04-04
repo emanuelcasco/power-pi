@@ -137,6 +137,8 @@ export interface TaskRecord {
 	createdAt: string;
 	/** ISO 8601 timestamp — last mutation to this record. */
 	updatedAt: string;
+	/** Number of times this task has been retried after a stall or failure. */
+	retryCount?: number;
 }
 
 /** An append-only event in the team signal log. Stored in `signals.ndjson`. */

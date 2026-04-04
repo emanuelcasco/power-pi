@@ -184,6 +184,8 @@ function spawnPiJsonMode(promptFilePath: string, userMessage: string, cwd: strin
     cwd,
     shell: false,
     stdio: ["ignore", "pipe", "pipe"],
+    // Fix #1: prevent subprocess from launching its own leader instances
+    env: { ...process.env, PI_TEAM_SUBPROCESS: "1" },
   });
 }
 
@@ -300,11 +302,23 @@ function parseExplicitHandoffs(
   }));
 }
 
+/** Maximum number of times a stalled task is retried before being permanently cancelled. */
+const MAX_TASK_RETRIES = 3;
+
+/**
+ * Minimum time (ms) a task must have been `in_progress` before it can be
+ * declared stalled. Prevents false positives on the same leader-cycle that
+ * spawned the teammate subprocess.
+ */
+const STALL_GRACE_MS = LEADER_POLL_MS * 2;
+
 export class LeaderRuntime {
   private activeLeaders = new Map<string, ActiveLeader>();
   private activeTeammates = new Map<string, ActiveTeammate>();
   /** Per-team mailbox cursor: tracks how many messages have been processed by the leader. */
   private lastMailboxCount = new Map<string, number>();
+  /** Fix #4: guard against concurrent runLeaderCycle executions for the same team. */
+  private readonly cycleRunning = new Set<string>();
 
   constructor(
     private store: TeamStore,
@@ -854,6 +868,17 @@ export class LeaderRuntime {
   }
 
   private async runLeaderCycle(teamId: string): Promise<void> {
+    // Fix #4: skip if a cycle for this team is already in flight
+    if (this.cycleRunning.has(teamId)) return;
+    this.cycleRunning.add(teamId);
+    try {
+      await this._runLeaderCycleInner(teamId);
+    } finally {
+      this.cycleRunning.delete(teamId);
+    }
+  }
+
+  private async _runLeaderCycleInner(teamId: string): Promise<void> {
     const team = await this.store.loadTeam(teamId);
     if (!team) return;
     if (
@@ -1252,19 +1277,47 @@ export class LeaderRuntime {
         // Skip if already flagged as stalled (avoid duplicate signals).
         if (task.blockers.some((b) => b.includes("teammate process lost"))) continue;
 
+        // Fix #2: only declare a task stalled after the grace period has elapsed.
+        // This prevents false positives on the very cycle that spawned the subprocess.
+        const age = Date.now() - Date.parse(task.updatedAt);
+        if (age < STALL_GRACE_MS) continue;
+
+        // Fix #3: circuit breaker — permanently cancel after MAX_TASK_RETRIES.
+        const retryCount = (task.retryCount ?? 0) + 1;
+        if (retryCount > MAX_TASK_RETRIES) {
+          await this.taskManager.updateTask(teamId, task.id, {
+            status: "cancelled",
+            blockers: [
+              ...task.blockers,
+              `Max retries exceeded (${MAX_TASK_RETRIES}) — task could not complete`,
+            ],
+            retryCount,
+          });
+          await this.signalManager.emit(teamId, {
+            source: "leader",
+            type: "error",
+            severity: "error",
+            taskId: task.id,
+            message: `Task ${task.id} permanently cancelled after ${MAX_TASK_RETRIES} failed retries — ${task.owner} process kept exiting`,
+            links: [],
+          });
+          continue;
+        }
+
         await this.taskManager.updateTask(teamId, task.id, {
           status: "blocked",
           blockers: [
             ...task.blockers,
             "teammate process lost — process exited without completing task",
           ],
+          retryCount,
         });
         await this.signalManager.emit(teamId, {
           source: "leader",
           type: "blocked",
           severity: "warning",
           taskId: task.id,
-          message: `Stalled task detected: ${task.id} (${task.title}) — ${task.owner} process lost`,
+          message: `Stalled task detected: ${task.id} (${task.title}) — ${task.owner} process lost (attempt ${retryCount}/${MAX_TASK_RETRIES})`,
           links: [],
         });
       }

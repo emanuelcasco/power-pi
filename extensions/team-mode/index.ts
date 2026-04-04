@@ -1217,7 +1217,9 @@ export default function (pi: ExtensionAPI): void {
 			managers.watchManager.cleanup();
 		}
 		initManagers(ctx.cwd);
-		if (managers) {
+		// Fix #1: teammate subprocesses must never spawn their own leader instances.
+		// They set PI_TEAM_SUBPROCESS=1 in their env (see spawnPiJsonMode).
+		if (!process.env.PI_TEAM_SUBPROCESS && managers) {
 			const runningTeams = await managers.teamManager.listTeams({ status: ["running"] });
 			for (const team of runningTeams) {
 				try {
