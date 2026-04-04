@@ -1,6 +1,6 @@
 {
   "name": "pi-mono-context-guard",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Pi extension that guards context window growth by auto-limiting read and rg output",
   "keywords": [
     "pi-package",

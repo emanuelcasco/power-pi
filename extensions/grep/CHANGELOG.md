@@ -1,8 +1,8 @@
-# pi-mono-multi-edit
+# pi-mono-grep
 
 ## 1.1.0
 
-### Patch Changes
+### Minor Changes
 
 - Add context-guard and grep extensions; improve multi-edit with dedup
 
@@ -26,13 +26,3 @@
 
   - Per-call read cache in `createRealWorkspace` deduplicates disk reads within a single `execute()` invocation (preflight + real-apply)
   - Emits `context-guard:file-modified` event after every real `writeText` and `deleteFile` so context-guard can evict stale dedup cache entries
-
-## 1.0.0
-
-### Major Changes
-
-- 199c367: First version of the extensions to upload to GitHub
-
-### Patch Changes
-
-- Bump all packages to 0.1.1
