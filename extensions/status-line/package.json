@@ -1,6 +1,6 @@
 {
   "name": "pi-mono-status-line",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Pi extension that adds git branch and richer stats to the footer",
   "keywords": [
     "pi-package",
@@ -16,5 +16,14 @@
     "extensions": [
       "./index.ts"
     ]
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emanuelcasco/pi-extensions.git",
+    "directory": "extensions/status-line"
+  },
+  "bugs": {
+    "url": "https://github.com/emanuelcasco/pi-extensions/issues"
+  },
+  "homepage": "https://github.com/emanuelcasco/pi-extensions#readme"
 }

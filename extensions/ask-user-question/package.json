@@ -1,6 +1,6 @@
 {
   "name": "pi-mono-ask-user-question",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Pi extension for asking users structured interactive questions",
   "keywords": [
     "pi-package",
@@ -16,5 +16,14 @@
     "extensions": [
       "./index.ts"
     ]
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emanuelcasco/pi-extensions.git",
+    "directory": "extensions/ask-user-question"
+  },
+  "bugs": {
+    "url": "https://github.com/emanuelcasco/pi-extensions/issues"
+  },
+  "homepage": "https://github.com/emanuelcasco/pi-extensions#readme"
 }

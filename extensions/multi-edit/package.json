@@ -1,6 +1,6 @@
 {
   "name": "pi-mono-multi-edit",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Pi extension that replaces edit with batch edits and Codex-style patches",
   "keywords": [
     "pi-package",
@@ -19,5 +19,14 @@
     "extensions": [
       "./index.ts"
     ]
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emanuelcasco/pi-extensions.git",
+    "directory": "extensions/multi-edit"
+  },
+  "bugs": {
+    "url": "https://github.com/emanuelcasco/pi-extensions/issues"
+  },
+  "homepage": "https://github.com/emanuelcasco/pi-extensions#readme"
 }
